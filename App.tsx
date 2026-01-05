@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Scope, Category, Prediction, LLM } from './types';
 import { PREDICTIONS_DATA } from './data';
 import { SCOPE_ICONS, CATEGORY_ICONS, MODEL_CONFIG } from './constants';
@@ -9,20 +9,16 @@ import { Methodology } from './components/Methodology';
 import { 
   LayoutGrid, 
   BarChart3, 
-  Info, 
-  Github, 
-  Calendar, 
-  Filter, 
   Search, 
   Brain,
   Hash,
-  ArrowUpDown,
   BookOpen,
   Lock,
   Unlock,
-  ShieldCheck,
   Zap,
-  Sparkles
+  Sparkles,
+  Github,
+  Info
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -51,7 +47,7 @@ const App: React.FC = () => {
       return scopeMatch && categoryMatch && modelMatch && searchMatch;
     }).sort((a, b) => {
       if (sortBy === 'confidence') return b.confidence - a.confidence;
-      return b.id.localeCompare(a.id); // Simple proxy for newest
+      return b.id.localeCompare(a.id);
     });
   }, [activeScope, activeCategory, activeModel, searchQuery, sortBy, predictions]);
 
@@ -81,13 +77,11 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pb-20 selection:bg-blue-500/30">
-      {/* Dynamic Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/30 blur-[120px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full" />
       </div>
 
-      {/* Header */}
       <header className="relative pt-16 pb-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md">
@@ -109,7 +103,6 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Admin Login Modal */}
       {showAdminLogin && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
           <div className="glass max-w-md w-full p-8 rounded-3xl border-white/10 shadow-2xl">
@@ -147,10 +140,8 @@ const App: React.FC = () => {
       )}
 
       <main className="max-w-7xl mx-auto px-6">
-        {/* Navigation & Toolbar */}
         <div className="sticky top-4 z-50 mb-12">
           <div className="glass p-2 rounded-3xl shadow-2xl flex flex-col md:flex-row gap-4 items-center border-white/5">
-            {/* View Switcher */}
             <div className="bg-white/5 rounded-2xl p-1 flex w-full md:w-auto">
               {[
                 { id: 'Grid', icon: <LayoutGrid className="w-4 h-4" /> },
@@ -170,7 +161,6 @@ const App: React.FC = () => {
 
             {view !== 'Methodology' && (
               <>
-                {/* Scope Filter */}
                 <div className="bg-white/5 rounded-2xl p-1 flex w-full md:w-auto overflow-x-auto no-scrollbar">
                   <button 
                     onClick={() => setActiveScope('All')}
@@ -190,7 +180,6 @@ const App: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Search Bar */}
                 <div className="relative w-full md:w-auto md:flex-grow">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input 
@@ -224,9 +213,7 @@ const App: React.FC = () => {
 
         {view !== 'Methodology' && (
           <>
-            {/* Secondary Filters Bar */}
             <div className="flex flex-col gap-6 mb-12">
-              {/* Models */}
               <div className="flex items-center gap-4 overflow-x-auto pb-2 no-scrollbar">
                 <div className="flex items-center gap-2 text-slate-500 shrink-0">
                   <Brain className="w-3.5 h-3.5" />
@@ -250,7 +237,6 @@ const App: React.FC = () => {
                 ))}
               </div>
 
-              {/* Categories */}
               <div className="flex items-center gap-4 overflow-x-auto pb-2 no-scrollbar">
                 <div className="flex items-center gap-2 text-slate-500 shrink-0">
                   <Hash className="w-3.5 h-3.5" />
@@ -275,7 +261,6 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Status Quick Count */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
               {[
                 { label: 'Predictions Found', value: filteredPredictions.length, color: 'text-blue-400' },
@@ -292,7 +277,6 @@ const App: React.FC = () => {
           </>
         )}
 
-        {/* Content View */}
         {view === 'Grid' && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -325,17 +309,11 @@ const App: React.FC = () => {
         {view === 'Methodology' && <Methodology />}
       </main>
 
-      {/* Footer */}
       <footer className="mt-40 border-t border-white/5 pt-16 pb-12 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <div 
-                className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center font-black text-white italic text-xl shadow-lg shadow-blue-500/20 cursor-help"
-                title="Oracle 2026 Platform"
-              >
-                O
-              </div>
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center font-black text-white italic text-xl shadow-lg shadow-blue-500/20">O</div>
               <span className="font-black text-slate-200 tracking-tighter text-xl">LLM ORACLE</span>
             </div>
             <p className="text-sm text-slate-500 leading-relaxed font-medium mb-6">
