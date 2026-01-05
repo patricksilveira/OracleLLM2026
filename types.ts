@@ -12,7 +12,14 @@ export type Category =
   | 'Finance & Economy' 
   | 'Sports';
 
-export type Status = 'Pending' | 'Success' | 'Failed' | 'Partial';
+export type Status = 'Pending' | 'Confirmed' | 'Debunked' | 'Ongoing';
+
+export interface EvidenceSource {
+  title: string;
+  url: string;
+  sourceName: string;
+  date: string;
+}
 
 export interface Prediction {
   id: string;
@@ -25,6 +32,9 @@ export interface Prediction {
   status: Status;
   timestamp: string;
   reasoning?: string;
+  detailedAnalysis?: string;
+  evidence?: EvidenceSource[];
+  verificationDate?: string;
 }
 
 export interface Statistics {

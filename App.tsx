@@ -1,11 +1,12 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Scope, Category, Prediction, LLM } from './types';
 import { PREDICTIONS_DATA } from './data';
 import { SCOPE_ICONS, CATEGORY_ICONS, MODEL_CONFIG } from './constants';
 import { PredictionCard } from './components/PredictionCard';
 import { Stats } from './components/Stats';
 import { Methodology } from './components/Methodology';
+import { PredictionDeepDive } from './components/PredictionDeepDive';
 import { 
   LayoutGrid, 
   BarChart3, 
@@ -33,6 +34,16 @@ const App: React.FC = () => {
   
   const [view, setView] = useState<'Grid' | 'Analytics' | 'Methodology'>('Grid');
   const [predictions, setPredictions] = useState<Prediction[]>(PREDICTIONS_DATA);
+  const [selectedPrediction, setSelectedPrediction] = useState<Prediction | null>(null);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (selectedPrediction || showAdminLogin) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [selectedPrediction, showAdminLogin]);
 
   const filteredPredictions = useMemo(() => {
     return predictions.filter(p => {
@@ -56,12 +67,16 @@ const App: React.FC = () => {
   const scopes: Scope[] = ['Brazil', 'Global', 'Geopolitics'];
 
   const handleStatusChange = (id: string, status: Prediction['status']) => {
-    setPredictions(prev => prev.map(p => {
+    const updated = predictions.map(p => {
       if (p.id === id) {
         return { ...p, status };
       }
       return p;
-    }));
+    });
+    setPredictions(updated);
+    if (selectedPrediction?.id === id) {
+      setSelectedPrediction({ ...selectedPrediction, status });
+    }
   };
 
   const handleAdminLogin = (e: React.FormEvent) => {
@@ -103,12 +118,13 @@ const App: React.FC = () => {
         </div>
       </header>
 
+      {/* Admin Login Modal */}
       {showAdminLogin && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
           <div className="glass max-w-md w-full p-8 rounded-3xl border-white/10 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <Lock className="w-5 h-5 text-blue-500" />
-              <h2 className="text-xl font-black uppercase tracking-tight">Admin Authentication</h2>
+              <h2 className="text-xl font-black uppercase tracking-tight text-white">Admin Authentication</h2>
             </div>
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <input 
@@ -117,7 +133,7 @@ const App: React.FC = () => {
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
                 autoFocus
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
               />
               <div className="flex gap-3">
                 <button 
@@ -137,6 +153,16 @@ const App: React.FC = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Deep Dive Modal */}
+      {selectedPrediction && (
+        <PredictionDeepDive 
+          prediction={selectedPrediction}
+          onClose={() => setSelectedPrediction(null)}
+          isAdmin={isAdmin}
+          onStatusChange={handleStatusChange}
+        />
       )}
 
       <main className="max-w-7xl mx-auto px-6">
@@ -187,7 +213,7 @@ const App: React.FC = () => {
                     placeholder="Search by text or ID (e.g. BR-01)..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all placeholder:text-slate-600"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all placeholder:text-slate-600 text-white"
                   />
                 </div>
               </>
@@ -264,9 +290,9 @@ const App: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
               {[
                 { label: 'Predictions Found', value: filteredPredictions.length, color: 'text-blue-400' },
-                { label: 'Confirmed (Success)', value: filteredPredictions.filter(p => p.status === 'Success').length, color: 'text-emerald-400' },
-                { label: 'Failed/Missed', value: filteredPredictions.filter(p => p.status === 'Failed').length, color: 'text-rose-400' },
-                { label: 'Still Pending', value: filteredPredictions.filter(p => p.status === 'Pending').length, color: 'text-slate-500' },
+                { label: 'Confirmed (Event Occurred)', value: filteredPredictions.filter(p => p.status === 'Confirmed').length, color: 'text-emerald-400' },
+                { label: 'Debunked (Wrong Prediction)', value: filteredPredictions.filter(p => p.status === 'Debunked').length, color: 'text-rose-400' },
+                { label: 'Pending Assessment', value: filteredPredictions.filter(p => p.status === 'Pending').length, color: 'text-slate-500' },
               ].map(stat => (
                 <div key={stat.label} className="glass p-4 rounded-2xl border-white/5 text-center">
                   <div className={`text-2xl font-black ${stat.color}`}>{stat.value}</div>
@@ -284,7 +310,7 @@ const App: React.FC = () => {
                 <PredictionCard 
                   key={p.id} 
                   prediction={p} 
-                  onStatusChange={handleStatusChange} 
+                  onSelect={setSelectedPrediction} 
                   isAdmin={isAdmin}
                 />
               ))}
