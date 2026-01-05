@@ -13,21 +13,27 @@ import {
   Pie
 } from 'recharts';
 import { Prediction, LLM } from '../types';
-import { MODEL_CONFIG } from '../constants';
 
 interface StatsProps {
   predictions: Prediction[];
 }
 
-// Added interface to ensure correct typing for model statistics aggregation
 interface ModelStat {
   name: string;
   count: number;
   confidence: number;
 }
 
+// Hex mapping for LLM brand colors to be used in Recharts
+const LLM_HEX_COLORS: Record<LLM, string> = {
+  'Gemini': '#60a5fa',    // blue-400
+  'Claude': '#fb923c',    // orange-400
+  'ChatGPT': '#34d399',   // emerald-400
+  'Perplexity': '#22d3ee', // cyan-400
+  'Grok': '#e2e8f0'       // slate-200
+};
+
 export const Stats: React.FC<StatsProps> = ({ predictions }) => {
-  // Fix: Explicitly type the accumulator as Record<string, ModelStat> to avoid 'unknown' inference during Object.values()
   const modelStats = predictions.reduce((acc, curr) => {
     if (!acc[curr.model]) {
       acc[curr.model] = { name: curr.model, count: 0, confidence: 0 };
@@ -37,7 +43,6 @@ export const Stats: React.FC<StatsProps> = ({ predictions }) => {
     return acc;
   }, {} as Record<string, ModelStat>);
 
-  // Fix: Cast Object.values to ModelStat[] to resolve "Spread types may only be created from object types" and "Property does not exist on type 'unknown'" errors.
   const chartData = (Object.values(modelStats) as ModelStat[]).map(m => ({
     ...m,
     avgConfidence: Math.round(m.confidence / m.count)
@@ -71,10 +76,14 @@ export const Stats: React.FC<StatsProps> = ({ predictions }) => {
               <Tooltip 
                 contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }}
                 itemStyle={{ color: '#f8fafc' }}
+                cursor={{ fill: 'rgba(255,255,255,0.05)' }}
               />
               <Bar dataKey="avgConfidence" radius={[8, 8, 0, 0]} barSize={40}>
                 {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={MODEL_CONFIG[entry.name as LLM].color.replace('text-', '#').replace('-400', '') || '#3b82f6'} />
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={LLM_HEX_COLORS[entry.name as LLM] || '#3b82f6'} 
+                  />
                 ))}
               </Bar>
             </BarChart>

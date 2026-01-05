@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Brain, 
@@ -16,7 +15,8 @@ import {
   ExternalLink,
   Link2,
   Sparkles,
-  Search
+  Search,
+  User
 } from 'lucide-react';
 
 export const Methodology: React.FC = () => {
@@ -35,6 +35,15 @@ export const Methodology: React.FC = () => {
       content: "Launched on January 3rd, 2026, the Oracle project benchmarks 'Synthetic Intuition'. We analyze how LLMs synthesize emerging signals to project outcomes in high-volatility environments."
     },
     {
+      icon: <User className="w-6 h-6 text-indigo-400" />,
+      title: "Project Lead",
+      content: (
+        <span>
+          Developed and researched by <a href="https://patricksilveira.com.br/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 font-bold">Patrick Silveira</a>. Connect on <a href="https://www.linkedin.com/in/patricksilveira/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 font-bold">LinkedIn</a>.
+        </span>
+      )
+    },
+    {
       icon: <Search className="w-6 h-6 text-emerald-400" />,
       title: "Automated Verification",
       content: "Future updates will include a 'Fact-Checking Agent' leveraging Google Search Grounding via Gemini API to automatically scan global news for evidence of prediction outcomes."
@@ -47,11 +56,6 @@ export const Methodology: React.FC = () => {
           All models were queried through <a href="https://go.adapta.org/campaign/ref-central?utm_content=wNAK2UtMW1wV" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 font-bold">Adapta's API Platform</a>. This ensures standardized latency and access to frontier model weights.
         </span>
       )
-    },
-    {
-      icon: <Sparkles className="w-6 h-6 text-blue-300" />,
-      title: "AI Development",
-      content: "Portions of the predictive analysis and dashboard logic were optimized using Google AI Studio, leveraging Gemini models for strategic reasoning."
     },
     {
       icon: <ShieldCheck className="w-6 h-6 text-cyan-500" />,

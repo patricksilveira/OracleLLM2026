@@ -14,30 +14,15 @@ export type Category =
 
 export type Status = 'Pending' | 'Confirmed' | 'Debunked' | 'Ongoing';
 
-export interface EvidenceSource {
-  title: string;
-  url: string;
-  sourceName: string;
-  date: string;
-}
-
 export interface Prediction {
   id: string;
-  code: string; // Unique reference code e.g. BR-001
+  code: string; 
   model: LLM;
   scope: Scope;
   category: Category;
-  content: string;
-  confidence: number; // 0 to 100
+  title: string;      // From "Title" in PDF
+  description: string; // From "Reasoning" in PDF
+  confidence: number;  // From "Confidence Level" in PDF
   status: Status;
   timestamp: string;
-  reasoning?: string;
-  detailedAnalysis?: string;
-  evidence?: EvidenceSource[];
-  verificationDate?: string;
-}
-
-export interface Statistics {
-  total: number;
-  byModel: Record<LLM, { success: number; failed: number; pending: number }>;
 }
