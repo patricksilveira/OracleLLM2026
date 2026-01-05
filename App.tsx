@@ -20,6 +20,7 @@ import {
   Github,
   Info,
   Unlock,
+  ExternalLink,
   Linkedin
 } from 'lucide-react';
 
@@ -339,21 +340,29 @@ const App: React.FC = () => {
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center font-black text-white italic text-xl shadow-lg shadow-blue-500/20">O</div>
               <span className="font-black text-slate-200 tracking-tighter text-xl">LLM ORACLE</span>
             </div>
-            <p className="text-sm text-slate-500 leading-relaxed font-medium mb-4">
-              Evaluation project tracking AI forecasting accuracy.
-            </p>
-            <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">
-              Project by <a href="https://patricksilveira.com.br/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400 transition-colors">Patrick Silveira</a>
-            </p>
+            <div className="space-y-3">
+              <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                Evaluation project tracking AI forecasting accuracy.
+              </p>
+              <a 
+                href="https://www.linkedin.com/in/patricksilveira/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs font-bold text-blue-400/80 hover:text-blue-400 transition-colors group"
+              >
+                <Linkedin className="w-3.5 h-3.5" />
+                Project done by Patrick Silveira
+                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
+            </div>
           </div>
           <div className="flex flex-col gap-4">
             <button onClick={() => setView('Methodology')} className="text-sm font-bold text-slate-500 hover:text-blue-400 transition-colors">Methodology</button>
             <button onClick={() => setView('Analytics')} className="text-sm font-bold text-slate-500 hover:text-blue-400 transition-colors">Analytics</button>
             <button onClick={() => setView('Grid')} className="text-sm font-bold text-slate-500 hover:text-blue-400 transition-colors">Grid</button>
           </div>
-          <div className="flex justify-center md:justify-end gap-3">
-            <a href="https://www.linkedin.com/in/patricksilveira/" target="_blank" rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 text-slate-400 hover:text-white transition-all border border-white/5 hover:border-white/10" title="LinkedIn"><Linkedin className="w-5 h-5" /></a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 text-slate-400 hover:text-white transition-all border border-white/5 hover:border-white/10" title="GitHub"><Github className="w-5 h-5" /></a>
+          <div className="flex justify-center md:justify-end gap-4">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 text-slate-400 hover:text-white transition-all"><Github className="w-5 h-5" /></a>
           </div>
         </div>
       </footer>

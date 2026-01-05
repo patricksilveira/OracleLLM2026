@@ -16,6 +16,7 @@ import {
   Link2,
   Sparkles,
   Search,
+  Linkedin,
   User
 } from 'lucide-react';
 
@@ -35,11 +36,11 @@ export const Methodology: React.FC = () => {
       content: "Launched on January 3rd, 2026, the Oracle project benchmarks 'Synthetic Intuition'. We analyze how LLMs synthesize emerging signals to project outcomes in high-volatility environments."
     },
     {
-      icon: <User className="w-6 h-6 text-indigo-400" />,
-      title: "Project Lead",
+      icon: <User className="w-6 h-6 text-purple-400" />,
+      title: "Project Leadership",
       content: (
         <span>
-          Developed and researched by <a href="https://patricksilveira.com.br/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 font-bold">Patrick Silveira</a>. Connect on <a href="https://www.linkedin.com/in/patricksilveira/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 font-bold">LinkedIn</a>.
+          Developed and led by <a href="https://www.linkedin.com/in/patricksilveira/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 font-bold">Patrick Silveira</a>. This experiment serves as an independent benchmark for frontier model accuracy.
         </span>
       )
     },
@@ -58,14 +59,14 @@ export const Methodology: React.FC = () => {
       )
     },
     {
+      icon: <Sparkles className="w-6 h-6 text-blue-300" />,
+      title: "AI Development",
+      content: "Portions of the predictive analysis and dashboard logic were optimized using Google AI Studio, leveraging Gemini models for strategic reasoning."
+    },
+    {
       icon: <ShieldCheck className="w-6 h-6 text-cyan-500" />,
       title: "Status Definitions",
       content: "PENDING: Event window remains open. CONFIRMED: Substantial evidence proves the event. DEBUNKED: A contradictory event occurred. ONGOING: Event process has started."
-    },
-    {
-      icon: <Microscope className="w-6 h-6 text-rose-500" />,
-      title: "Calibration tracking",
-      content: "We track 'Calibration'—how often their 90% confidence predictions actually come true versus their 50% ones. This measures true model self-awareness."
     }
   ];
 
@@ -182,7 +183,7 @@ export const Methodology: React.FC = () => {
 
       <div className="text-center py-8">
         <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">
-          Data Captured: Jan 03, 2026 • Verified Monthly
+          Project done by <a href="https://www.linkedin.com/in/patricksilveira/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400 transition-colors">Patrick Silveira</a> • Data Captured: Jan 03, 2026
         </p>
       </div>
     </div>
