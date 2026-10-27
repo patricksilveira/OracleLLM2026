@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Prediction } from '../types';
 import { MODEL_CONFIG, CATEGORY_ICONS } from '../constants';
@@ -7,9 +6,11 @@ import {
   Clock, 
   CheckCircle2, 
   XCircle, 
-  Activity, 
   Brain,
-  Quote
+  Quote,
+  ExternalLink,
+  ShieldCheck,
+  Calendar
 } from 'lucide-react';
 
 interface PredictionDeepDiveProps {
@@ -30,8 +31,7 @@ export const PredictionDeepDive: React.FC<PredictionDeepDiveProps> = ({
   const statusConfig = {
     'Pending': { icon: <Clock className="w-4 h-4" />, color: 'text-slate-400', bg: 'bg-slate-800', border: 'border-slate-700' },
     'Confirmed': { icon: <CheckCircle2 className="w-4 h-4" />, color: 'text-emerald-400', bg: 'bg-emerald-900/20', border: 'border-emerald-800/30' },
-    'Debunked': { icon: <XCircle className="w-4 h-4" />, color: 'text-rose-400', bg: 'bg-rose-900/20', border: 'border-rose-800/30' },
-    'Ongoing': { icon: <Activity className="w-4 h-4" />, color: 'text-blue-400', bg: 'bg-blue-900/20', border: 'border-blue-800/30' }
+    'Debunked': { icon: <XCircle className="w-4 h-4" />, color: 'text-rose-400', bg: 'bg-rose-900/20', border: 'border-rose-800/30' }
   };
 
   const currentStatus = statusConfig[prediction.status];
@@ -50,10 +50,10 @@ export const PredictionDeepDive: React.FC<PredictionDeepDiveProps> = ({
                 {model.icon}
                 <span className="text-[11px] font-black uppercase tracking-widest">{prediction.model}</span>
               </div>
-              <div className="text-slate-600 text-[11px] font-black uppercase tracking-[0.2em]">Ref: {prediction.code}</div>
+              <div className="text-slate-500 text-[11px] font-black uppercase tracking-[0.2em]">Ref: {prediction.code}</div>
             </div>
             
-            <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight italic">
+            <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">
               {prediction.title}
             </h2>
           </div>
@@ -63,24 +63,73 @@ export const PredictionDeepDive: React.FC<PredictionDeepDiveProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="flex-grow overflow-y-auto custom-scrollbar p-8 md:p-12">
-          <div className="max-w-2xl mx-auto space-y-12">
-            <div className="space-y-6">
+        <div className="flex-grow overflow-y-auto custom-scrollbar p-8 md:p-12 space-y-8">
+          <div className="max-w-3xl mx-auto space-y-8">
+            
+            {/* Verification Audit Banner if Verified */}
+            {(prediction.verifiedAt || (prediction.verifiedSources && prediction.verifiedSources.length > 0)) && (
+              <div className="p-6 rounded-2xl bg-emerald-950/20 border border-emerald-800/40 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Human-Verified Dossier</span>
+                  </div>
+                  {prediction.verifiedAt && (
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>{new Date(prediction.verifiedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                    </div>
+                  )}
+                </div>
+
+                {prediction.verifiedNotes && (
+                  <p className="text-sm text-slate-200 leading-relaxed bg-black/30 p-4 rounded-xl border border-white/5">
+                    {prediction.verifiedNotes}
+                  </p>
+                )}
+
+                {prediction.verifiedSources && prediction.verifiedSources.length > 0 && (
+                  <div className="space-y-2 pt-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Verified News Sources</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {prediction.verifiedSources.map((source, idx) => (
+                        <a
+                          key={idx}
+                          href={source.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between gap-2 p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition-colors group"
+                        >
+                          <span className="text-xs text-slate-300 font-medium truncate group-hover:text-cyan-400">
+                            {source.sourceTitle || source.sourceUrl}
+                          </span>
+                          <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0 group-hover:text-cyan-400" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Original Strategic Analysis */}
+            <div className="space-y-4">
               <div className="flex items-center gap-3 text-cyan-400">
                 <Brain className="w-5 h-5" />
                 <h4 className="text-[10px] font-black uppercase tracking-[0.4em]">Reasoning & Strategic Analysis</h4>
               </div>
-              <div className="text-slate-300 text-lg leading-relaxed font-medium bg-white/[0.02] p-8 rounded-3xl border border-white/5 relative">
+              <div className="text-slate-300 text-base md:text-lg leading-relaxed font-normal bg-white/[0.02] p-8 rounded-3xl border border-white/5 relative">
                 <Quote className="absolute top-4 right-4 w-8 h-8 text-white/5" />
                 {prediction.description}
               </div>
             </div>
 
+            {/* Metadata Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-6 rounded-3xl bg-white/5 border border-white/5">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">AI Confidence Score</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Original Confidence</span>
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl font-black text-cyan-400 tracking-tighter">{prediction.confidence}%</span>
+                  <span className="text-4xl font-black text-cyan-400 tracking-tighter tabular-nums">{prediction.confidence}%</span>
                 </div>
                 <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-4">
                   <div className="h-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.4)]" style={{ width: `${prediction.confidence}%` }} />
@@ -113,11 +162,11 @@ export const PredictionDeepDive: React.FC<PredictionDeepDiveProps> = ({
           
           {isAdmin && (
             <div className="flex gap-2">
-              {(['Pending', 'Confirmed', 'Debunked', 'Ongoing'] as const).map(s => (
+              {(['Pending', 'Confirmed', 'Debunked'] as const).map(s => (
                 <button
                   key={s}
                   onClick={() => onStatusChange?.(prediction.id, s)}
-                  className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${prediction.status === s ? 'bg-cyan-600 text-white border-cyan-500' : 'bg-white/5 text-slate-500 border-white/10'}`}
+                  className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${prediction.status === s ? 'bg-cyan-600 text-white border-cyan-500' : 'bg-white/5 text-slate-500 border-white/10 hover:text-slate-300'}`}
                 >
                   {s}
                 </button>

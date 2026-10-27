@@ -1,0 +1,157 @@
+[
+  {
+    "id": "dossier-br-cl-01-1793059284009",
+    "predictionId": "br-cl-01",
+    "predictionCode": "BR-CL-01",
+    "predictionTitle": "Slowed Economic Growth with Persistent Inflation",
+    "model": "Claude",
+    "scope": "Brazil",
+    "category": "Finance & Economy",
+    "suggestedStatus": "Pending",
+    "confidence": 85,
+    "evaluatedAt": "2026-10-27T00:01:24.009Z",
+    "reasoning": "While the 2026 Brazilian General Election concluded yesterday, October 25, 2026, the economic metrics cited (annual GDP growth and year-end IPCA inflation) are full-year projections that cannot be finalized until the conclusion of the 2026 fiscal year. Current data reflects a trend of high interest rates and persistent inflation, consistent with the prediction, but the final figures remain subject to the economic performance of the final two months of 2026.",
+    "evidence": [
+      {
+        "sourceTitle": "Central Bank of Brazil - Focus Report (October 2026)",
+        "sourceUrl": "https://www.bcb.gov.br/publicacoes/focus",
+        "snippet": "Market expectations for the 2026 IPCA remain anchored above the 3% target, with the Selic rate maintained at restrictive levels to combat persistent inflationary pressures.",
+        "publishedDate": "October 26, 2026"
+      },
+      {
+        "sourceTitle": "IPEA Economic Outlook - 2026 Year-End Projections",
+        "sourceUrl": "https://www.ipea.gov.br/portal/publicacoes",
+        "snippet": "Projections for GDP growth remain in the 1.8% to 2.0% range, reflecting a slowdown in domestic consumption and the impact of high borrowing costs.",
+        "publishedDate": "October 2026"
+      }
+    ],
+    "reviewStatus": "pending_review"
+  },
+  {
+    "id": "dossier-br-grok-01-1793057080346",
+    "predictionId": "br-grok-01",
+    "predictionCode": "BR-GROK-01",
+    "predictionTitle": "Lula secures re-election in October 2026 with 52% in the second round against a unified right-wing opponent like Tarcísio de Freitas.",
+    "model": "Grok",
+    "scope": "Brazil",
+    "category": "Politics",
+    "suggestedStatus": "Confirmed",
+    "confidence": 95,
+    "evaluatedAt": "2026-10-26T23:24:40.347Z",
+    "reasoning": "The prediction is confirmed as accurate regarding the outcome of the 2026 Brazilian Presidential election. Luiz Inácio Lula da Silva secured re-election in the second round with 51.79% of the valid votes, aligning closely with the predicted 52% figure. While the specific opponent in the final runoff was Flávio Bolsonaro rather than Tarcísio de Freitas, the core forecast of a Lula victory in the second round based on incumbent strength and regional support was validated by the official TSE results.",
+    "evidence": [
+      {
+        "sourceTitle": "TSE Resultados 2026: Veja a apuração oficial do 2º turno",
+        "sourceUrl": "https://oglobo.globo.com/apuracao-eleicoes-2026/noticia/2026/10/26/tse-resultados-2026-veja-a-apuracao-oficial-do-2o-turno.ghtml",
+        "snippet": "O presidente do Brasil e candidato à reeleição pelo Partido dos Trabalhadores (PT), Luiz Inácio Lula da Silva, reage ao tomar conhecimento dos primeiros resultados do segundo turno da ...",
+        "publishedDate": "October 26, 2026"
+      },
+      {
+        "sourceTitle": "Resultado do 2º turno para presidente",
+        "sourceUrl": "https://resultadoseleicoes2026.com.br/segundo-turno",
+        "snippet": "Lula foi eleito presidente com 51,79% dos votos válidos, segundo o TSE.",
+        "publishedDate": "October 26, 2026"
+      },
+      {
+        "sourceTitle": "Eleições 2026: O 2º turno em mapas e gráficos",
+        "sourceUrl": "https://g1.globo.com/politica/eleicoes/2026/noticia/2026/10/26/eleicoes-2026-o-2o-turno-em-mapas-e-graficos.ghtml",
+        "snippet": "Lula virou a disputa, venceu em 13 estados e ampliou o saldo em 5.410 dos 5.570 municípios.",
+        "publishedDate": "October 26, 2026"
+      },
+      {
+        "sourceTitle": "Brazil election 2026: live second round results",
+        "sourceUrl": "https://www.theguardian.com/world/ng-interactive/2026/oct/25/brazil-election-2026-live-second-round-results",
+        "snippet": "After a shock defeat in the first round, the incumbent Brazilian president, Luiz Inácio Lula da Silva, has turned the election around to win the runoff.",
+        "publishedDate": "October 25, 2026"
+      },
+      {
+        "sourceTitle": "g1.globo.com - News Report",
+        "sourceUrl": "https://g1.globo.com/politica/eleicoes/2026/ao-vivo/apuracao-eleicoes-2026-resultados-segundo-turno.ghtml",
+        "snippet": "O g1 acompanhou a apuração do segundo turno das Eleições 2026, que definiu a disputa pela Presidência entre Luiz Inácio Lula da Silva (PT) e Flávio Bolsonaro (PL).",
+        "publishedDate": "2026-10-26"
+      }
+    ],
+    "reviewStatus": "approved",
+    "reviewedAt": "2026-10-26T23:54:45.658Z",
+    "reviewedBy": "Administrator"
+  },
+  {
+    "id": "dossier-br-cl-01-seed",
+    "predictionId": "br-cl-01",
+    "predictionCode": "BR-CL-01",
+    "predictionTitle": "Slowed Economic Growth with Persistent Inflation",
+    "model": "Claude",
+    "scope": "Brazil",
+    "category": "Finance & Economy",
+    "suggestedStatus": "Confirmed",
+    "confidence": 88,
+    "evaluatedAt": "2026-10-23T22:59:20.914Z",
+    "reasoning": "Central Bank of Brazil and Focus bulletin reports in 2026 confirm GDP growth slowing to 1.7% while annual IPCA inflation hovered near 4.15%, aligning with the projected moderate stagnation and high Selic scenario.",
+    "evidence": [
+      {
+        "sourceTitle": "Banco Central do Brasil - Relatório Focus 2026",
+        "sourceUrl": "https://www.bcb.gov.br",
+        "snippet": "Expectativas de mercado para IPCA e PIB 2026 mantêm projeção de taxa Selic restritiva.",
+        "publishedDate": "2026-03-15"
+      },
+      {
+        "sourceTitle": "Valor Econômico - Cenário Macroeconômico",
+        "sourceUrl": "https://valor.globo.com",
+        "snippet": "Crescimento moderado e inflação persistente limitam cortes de juros.",
+        "publishedDate": "2026-04-10"
+      }
+    ],
+    "reviewStatus": "approved",
+    "reviewedAt": "2026-10-26T22:59:42.755Z",
+    "reviewedBy": "Administrator"
+  },
+  {
+    "id": "dossier-br-cl-05-seed",
+    "predictionId": "br-cl-05",
+    "predictionCode": "BR-CL-05",
+    "predictionTitle": "Crypto Regulation Comes into Effect with Significant Market Impact",
+    "model": "Claude",
+    "scope": "Brazil",
+    "category": "Crypto",
+    "suggestedStatus": "Confirmed",
+    "confidence": 94,
+    "evaluatedAt": "2026-10-21T22:59:20.914Z",
+    "reasoning": "Central Bank Resolutions No. 519, 520, and 521 officially took effect on February 2, 2026. The DeCripto compliance requirements have mandated foreign exchanges to submit transaction ledgers.",
+    "evidence": [
+      {
+        "sourceTitle": "Receita Federal - Instrução Normativa DeCripto",
+        "sourceUrl": "https://www.gov.br/receitafederal",
+        "snippet": "Regulamentação e obrigações de reporte para prestadoras de serviços de ativos virtuais.",
+        "publishedDate": "2026-02-05"
+      }
+    ],
+    "reviewStatus": "approved",
+    "reviewedAt": "2026-10-26T23:54:52.099Z",
+    "reviewedBy": "Administrator"
+  },
+  {
+    "id": "dossier-br-cl-02-seed",
+    "predictionId": "br-cl-02",
+    "predictionCode": "BR-CL-02",
+    "predictionTitle": "Lula Wins Presidential Elections with a Comfortable Margin",
+    "model": "Claude",
+    "scope": "Brazil",
+    "category": "Politics",
+    "suggestedStatus": "Confirmed",
+    "confidence": 82,
+    "evaluatedAt": "2026-10-19T22:59:20.914Z",
+    "reasoning": "The presidential election is scheduled for October 4, 2026. While campaign developments and polling continue, the outcome cannot be confirmed until votes are counted.",
+    "evidence": [
+      {
+        "sourceTitle": "Tribunal Superior Eleitoral (TSE) - Calendário Eleitoral 2026",
+        "sourceUrl": "https://www.tse.jus.br",
+        "snippet": "Primeiro turno das Eleições Gerais de 2026 está marcado para o primeiro domingo de outubro.",
+        "publishedDate": "2026-01-10"
+      }
+    ],
+    "reviewStatus": "modified",
+    "reviewedAt": "2026-10-26T23:55:02.752Z",
+    "reviewedBy": "Administrator",
+    "adminNotes": "The presidential election is scheduled for October 4, 2026. While campaign developments and polling continue, the outcome cannot be confirmed until votes are counted."
+  }
+]

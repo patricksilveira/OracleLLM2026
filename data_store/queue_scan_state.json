@@ -1,0 +1,34 @@
+{
+  "isScanning": true,
+  "isPaused": false,
+  "isCompleted": false,
+  "currentIndex": 1,
+  "totalItems": 2,
+  "processedCount": 1,
+  "confirmedCount": 0,
+  "debunkedCount": 0,
+  "pendingCount": 1,
+  "failedCount": 0,
+  "startedAt": "2026-10-27T00:01:14.974Z",
+  "lastUpdatedAt": "2026-10-27T00:01:14.995Z",
+  "activeRunId": "run-1793059274974",
+  "filter": {
+    "scope": "All",
+    "model": "All",
+    "unverifiedOnly": true
+  },
+  "recentLogs": [
+    {
+      "timestamp": "12:01:24 AM",
+      "predictionCode": "BR-CL-01",
+      "model": "Claude",
+      "status": "Pending",
+      "confidence": 85,
+      "message": "BR-CL-01 (Claude): Suggested Pending [85%]",
+      "type": "info"
+    }
+  ],
+  "currentPredictionCode": "BR-CL-01",
+  "currentModel": "Claude",
+  "currentTitle": "Slowed Economic Growth with Persistent Inflation"
+}

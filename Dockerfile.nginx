@@ -1,0 +1,39 @@
+# ===================================================
+# Multi-stage Dockerfile for NGINX Entry / Ingress Container
+# ===================================================
+
+# Stage 1: Build the Vite React Frontend
+FROM node:20-slim AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+# Stage 2: Production NGINX Entry Container
+FROM nginx:alpine
+
+# Remove default nginx static html
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy built frontend assets from builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy dynamic NGINX template
+# Official nginx:alpine automatically runs envsubst on /etc/nginx/templates/*.template
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+
+# Default environment variables for template
+ENV PORT=80
+ENV BACKEND_URL=http://127.0.0.1:3000
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:${PORT}/healthz || exit 1
+
+EXPOSE 80 8080
+
+CMD ["nginx", "-g", "daemon off;"]

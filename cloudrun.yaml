@@ -1,0 +1,42 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: llm-oracle-2026
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      containers:
+        # Container de Entrada: NGINX Ingress Reverse Proxy
+        - name: nginx-ingress
+          image: gcr.io/YOUR_PROJECT_ID/llm-oracle-nginx:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: BACKEND_URL
+              value: "http://127.0.0.1:3000"
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+
+        # Container Backend: Node.js / Express API & Verification Engine
+        - name: backend-app
+          image: gcr.io/YOUR_PROJECT_ID/llm-oracle-backend:latest
+          env:
+            - name: PORT
+              value: "3000"
+            - name: NODE_ENV
+              value: "production"
+            - name: GEMINI_API_KEY
+              value: "YOUR_GEMINI_API_KEY"
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"

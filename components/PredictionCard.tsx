@@ -16,15 +16,13 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({ prediction, onSe
   const statusIcon = {
     'Pending': <Clock className="w-3.5 h-3.5" />,
     'Confirmed': <CheckCircle2 className="w-3.5 h-3.5" />,
-    'Debunked': <XCircle className="w-3.5 h-3.5" />,
-    'Ongoing': <Activity className="w-3.5 h-3.5 animate-pulse" />
+    'Debunked': <XCircle className="w-3.5 h-3.5" />
   };
 
   const statusColors = {
     'Pending': 'bg-slate-800/60 text-slate-400 border-slate-700/30',
     'Confirmed': 'bg-emerald-900/20 text-emerald-400 border-emerald-800/30',
-    'Debunked': 'bg-rose-900/20 text-rose-400 border-rose-800/30',
-    'Ongoing': 'bg-blue-900/20 text-blue-400 border-blue-800/30'
+    'Debunked': 'bg-rose-900/20 text-rose-400 border-rose-800/30'
   };
 
   return (

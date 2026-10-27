@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Scope, Category, Prediction, LLM } from './types';
 import { PREDICTIONS_DATA } from './data';
 import { SCOPE_ICONS, CATEGORY_ICONS, MODEL_CONFIG } from './constants';
@@ -6,6 +6,7 @@ import { PredictionCard } from './components/PredictionCard';
 import { Stats } from './components/Stats';
 import { Methodology } from './components/Methodology';
 import { PredictionDeepDive } from './components/PredictionDeepDive';
+import { VerificationCenter } from './components/VerificationCenter';
 import { Analytics } from "@vercel/analytics/react";
 import { 
   LayoutGrid, 
@@ -15,13 +16,11 @@ import {
   Hash,
   BookOpen,
   Lock,
-  Zap,
-  Sparkles,
   Github,
-  Info,
   Unlock,
   ExternalLink,
-  Linkedin
+  Linkedin,
+  ShieldCheck
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -33,10 +32,46 @@ const App: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
+  const [pendingQueueCount, setPendingQueueCount] = useState<number>(0);
   
-  const [view, setView] = useState<'Grid' | 'Analytics' | 'Methodology'>('Grid');
+  const [view, setView] = useState<'Grid' | 'Analytics' | 'Methodology' | 'Verification'>('Grid');
   const [predictions, setPredictions] = useState<Prediction[]>(PREDICTIONS_DATA);
   const [selectedPrediction, setSelectedPrediction] = useState<Prediction | null>(null);
+
+  // Fetch updated predictions from backend store
+  const loadPredictions = useCallback(async () => {
+    try {
+      const res = await fetch('/api/predictions');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.predictions) && data.predictions.length > 0) {
+          setPredictions(data.predictions);
+        }
+      }
+    } catch {
+      // Fallback to static data
+    }
+  }, []);
+
+  // Fetch queue count
+  const loadQueueCount = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/status');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.status) {
+          setPendingQueueCount(data.status.queueCount || 0);
+        }
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPredictions();
+    loadQueueCount();
+  }, [loadPredictions, loadQueueCount]);
 
   useEffect(() => {
     if (selectedPrediction || showAdminLogin) {
@@ -68,7 +103,7 @@ const App: React.FC = () => {
     const total = filteredPredictions.length;
     const confirmed = filteredPredictions.filter(p => p.status === 'Confirmed').length;
     const failed = filteredPredictions.filter(p => p.status === 'Debunked').length;
-    const pending = filteredPredictions.filter(p => p.status === 'Pending' || p.status === 'Ongoing').length;
+    const pending = filteredPredictions.filter(p => p.status === 'Pending').length;
     return { total, confirmed, failed, pending };
   }, [filteredPredictions]);
 
@@ -93,14 +128,41 @@ const App: React.FC = () => {
     }
   };
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminPassword === 'oracle2026') {
-      setIsAdmin(true);
-      setShowAdminLogin(false);
-      setAdminPassword('');
-    } else {
-      alert('Invalid code');
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsAdmin(true);
+        setShowAdminLogin(false);
+        setAdminPassword('');
+        setView('Verification');
+        loadQueueCount();
+      } else {
+        alert(data.message || 'Invalid code');
+      }
+    } catch {
+      // Local fallback
+      if (adminPassword === 'jb2GFPwfVHgBJWsB2J4Kao') {
+        setIsAdmin(true);
+        setShowAdminLogin(false);
+        setAdminPassword('');
+        setView('Verification');
+      } else {
+        alert('Invalid code');
+      }
+    }
+  };
+
+  const handlePredictionUpdated = (updated: Prediction) => {
+    setPredictions(prev => prev.map(p => p.id === updated.id ? updated : p));
+    if (selectedPrediction?.id === updated.id) {
+      setSelectedPrediction(updated);
     }
   };
 
@@ -114,12 +176,16 @@ const App: React.FC = () => {
 
       <header className="relative pt-16 pb-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md">
+          <div 
+            onClick={() => setShowAdminLogin(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md cursor-pointer hover:bg-white/10 transition-colors"
+          >
             <div className={`w-2 h-2 rounded-full ${isAdmin ? 'bg-purple-500 animate-pulse' : 'bg-emerald-500 animate-pulse'}`} />
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">
-              {isAdmin ? 'Oracle Admin Mode Active' : 'Live Prediction Tracking'}
+              {isAdmin ? 'Oracle Admin Mode Active' : 'Live Prediction Tracking · Click for Admin'}
             </span>
           </div>
+
           <h1 
             className="text-6xl md:text-8xl font-black mb-6 tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-500 cursor-pointer select-none" 
             onClick={() => setView('Grid')}
@@ -128,11 +194,12 @@ const App: React.FC = () => {
             ORACLE <span className="text-blue-500">2026</span>
           </h1>
           <p className="text-slate-400 max-w-xl mx-auto font-medium text-sm md:text-base leading-relaxed">
-            Benchmarking the foresight of the world's most powerful LLMs across strategic domains. 
+            Benchmarking the foresight of the world's most powerful LLMs across strategic domains with automated monthly news verification.
           </p>
         </div>
       </header>
 
+      {/* Admin Login Modal */}
       {showAdminLogin && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
           <div className="glass max-w-md w-full p-8 rounded-3xl border-white/10 shadow-2xl">
@@ -157,7 +224,7 @@ const App: React.FC = () => {
                   Verify Access
                 </button>
                 <button 
-                  type="button"
+                  type="button" 
                   onClick={() => setShowAdminLogin(false)}
                   className="px-6 bg-white/5 hover:bg-white/10 text-slate-400 rounded-2xl transition-all"
                 >
@@ -169,6 +236,7 @@ const App: React.FC = () => {
         </div>
       )}
 
+      {/* Deep Dive Modal */}
       {selectedPrediction && (
         <PredictionDeepDive 
           prediction={selectedPrediction}
@@ -185,20 +253,34 @@ const App: React.FC = () => {
               {[
                 { id: 'Grid', icon: <LayoutGrid className="w-4 h-4" /> },
                 { id: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
-                { id: 'Methodology', icon: <BookOpen className="w-4 h-4" /> }
+                { id: 'Methodology', icon: <BookOpen className="w-4 h-4" /> },
+                ...(isAdmin ? [{ 
+                  id: 'Verification', 
+                  icon: <ShieldCheck className="w-4 h-4 text-cyan-400" />,
+                  badge: pendingQueueCount > 0 ? pendingQueueCount : undefined 
+                }] : [])
               ].map(t => (
                 <button 
                   key={t.id}
                   onClick={() => setView(t.id as any)}
-                  className={`flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition-all ${view === t.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                  className={`flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+                    view === t.id 
+                      ? t.id === 'Verification' ? 'bg-cyan-600 text-white shadow-lg' : 'bg-blue-600 text-white shadow-lg' 
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
                 >
                   {t.icon}
-                  {t.id}
+                  <span>{t.id === 'Verification' ? 'Verification Queue' : t.id}</span>
+                  {t.badge !== undefined && (
+                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-cyan-400 text-slate-950 font-extrabold">
+                      {t.badge}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
 
-            {view !== 'Methodology' && (
+            {view !== 'Methodology' && view !== 'Verification' && (
               <>
                 <div className="bg-white/5 rounded-2xl p-1 flex w-full md:w-auto overflow-x-auto no-scrollbar">
                   <button 
@@ -232,19 +314,30 @@ const App: React.FC = () => {
               </>
             )}
 
-            {isAdmin && (
+            {isAdmin ? (
               <button 
-                onClick={() => setIsAdmin(false)}
+                onClick={() => {
+                  setIsAdmin(false);
+                  if (view === 'Verification') setView('Grid');
+                }}
                 className="px-4 py-2.5 rounded-2xl bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-all flex items-center gap-2 text-xs font-bold shrink-0 border border-purple-500/30"
               >
                 <Unlock className="w-3 h-3" />
                 Logout Admin
               </button>
+            ) : (
+              <button
+                onClick={() => setShowAdminLogin(true)}
+                className="px-4 py-2.5 rounded-2xl bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 text-xs font-semibold shrink-0"
+              >
+                <Lock className="w-3 h-3" />
+                Admin
+              </button>
             )}
           </div>
         </div>
 
-        {view !== 'Methodology' && (
+        {view !== 'Methodology' && view !== 'Verification' && (
           <div className="flex flex-col gap-6 mb-12">
             <div className="flex items-center gap-4 overflow-x-auto pb-2 no-scrollbar">
               <div className="flex items-center gap-2 text-slate-500 shrink-0">
@@ -300,15 +393,15 @@ const App: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
               <div className="bg-[#111827]/40 border border-slate-800/60 rounded-[20px] p-6 text-center">
                 <div className="text-3xl font-black text-blue-400 mb-1">{summaryStats.total}</div>
-                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Predictions Found</div>
+                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Predictions Tracked</div>
               </div>
               <div className="bg-[#111827]/40 border border-slate-800/60 rounded-[20px] p-6 text-center">
                 <div className="text-3xl font-black text-emerald-400 mb-1">{summaryStats.confirmed}</div>
-                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Confirmed (Success)</div>
+                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Confirmed (Verified)</div>
               </div>
               <div className="bg-[#111827]/40 border border-slate-800/60 rounded-[20px] p-6 text-center">
                 <div className="text-3xl font-black text-rose-400 mb-1">{summaryStats.failed}</div>
-                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Failed/Missed</div>
+                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Debunked / Missed</div>
               </div>
               <div className="bg-[#111827]/40 border border-slate-800/60 rounded-[20px] p-6 text-center">
                 <div className="text-3xl font-black text-slate-400 mb-1">{summaryStats.pending}</div>
@@ -331,6 +424,16 @@ const App: React.FC = () => {
         
         {view === 'Analytics' && <Stats predictions={filteredPredictions} />}
         {view === 'Methodology' && <Methodology />}
+        {view === 'Verification' && (
+          <VerificationCenter 
+            predictions={predictions}
+            onPredictionUpdated={handlePredictionUpdated}
+            onRefreshAll={() => {
+              loadPredictions();
+              loadQueueCount();
+            }}
+          />
+        )}
       </main>
 
       <footer className="mt-40 border-t border-white/5 pt-16 pb-12 px-6">
@@ -342,7 +445,7 @@ const App: React.FC = () => {
             </div>
             <div className="space-y-3">
               <p className="text-sm text-slate-500 leading-relaxed font-medium">
-                Evaluation project tracking AI forecasting accuracy.
+                Evaluation project tracking AI forecasting accuracy with automated news verification.
               </p>
               <a 
                 href="https://www.linkedin.com/in/patricksilveira/" 
@@ -360,6 +463,7 @@ const App: React.FC = () => {
             <button onClick={() => setView('Methodology')} className="text-sm font-bold text-slate-500 hover:text-blue-400 transition-colors">Methodology</button>
             <button onClick={() => setView('Analytics')} className="text-sm font-bold text-slate-500 hover:text-blue-400 transition-colors">Analytics</button>
             <button onClick={() => setView('Grid')} className="text-sm font-bold text-slate-500 hover:text-blue-400 transition-colors">Grid</button>
+            <button onClick={() => setShowAdminLogin(true)} className="text-sm font-bold text-cyan-500 hover:text-cyan-400 transition-colors">Admin Verification Center</button>
           </div>
           <div className="flex justify-center md:justify-end gap-4">
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 text-slate-400 hover:text-white transition-all"><Github className="w-5 h-5" /></a>

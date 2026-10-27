@@ -1,0 +1,40 @@
+services:
+  # Entry Container: NGINX Ingress & Reverse Proxy
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: llm_oracle_nginx_ingress
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - PORT=80
+      - BACKEND_URL=http://backend:3000
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
+  # Application Backend: Node.js / Express API & Verification Engine
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: llm_oracle_backend
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      # Persist verification store & audit logs across container restarts
+      - ./data_store:/app/data_store
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

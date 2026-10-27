@@ -1,0 +1,42 @@
+[
+  {
+    "id": "run-1793059274974",
+    "timestamp": "2026-10-27T00:01:14.974Z",
+    "month": "October 2026",
+    "totalChecked": 2,
+    "suggestedConfirmed": 0,
+    "suggestedDebunked": 0,
+    "suggestedPending": 0,
+    "status": "running"
+  },
+  {
+    "id": "run-1793056479171",
+    "timestamp": "2026-10-26T23:14:39.171Z",
+    "month": "October 2026",
+    "totalChecked": 3,
+    "suggestedConfirmed": 0,
+    "suggestedDebunked": 0,
+    "suggestedPending": 0,
+    "status": "running"
+  },
+  {
+    "id": "run-1793055840628",
+    "timestamp": "2026-10-26T23:04:00.628Z",
+    "month": "October 2026",
+    "totalChecked": 4,
+    "suggestedConfirmed": 0,
+    "suggestedDebunked": 0,
+    "suggestedPending": 0,
+    "status": "completed"
+  },
+  {
+    "id": "run-1793055823962",
+    "timestamp": "2026-10-26T23:03:43.962Z",
+    "month": "October 2026",
+    "totalChecked": 4,
+    "suggestedConfirmed": 0,
+    "suggestedDebunked": 0,
+    "suggestedPending": 0,
+    "status": "completed"
+  }
+]

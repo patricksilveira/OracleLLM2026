@@ -1,4 +1,4 @@
-import { Prediction } from "./type";
+import { Prediction } from "./types";
 
 export const PREDICTIONS_DATA: Prediction[] = [
   // --- BRAZIL (Claude) ---
